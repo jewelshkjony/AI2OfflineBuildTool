@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="OfflineBuildTool" default="apk">
+  <description>App Inventor Offline Build Tool</description>
+
+  <!-- Set project name without (.aia) -->
+  <property name="project.name" value="aiplayapp"/>
+  <property name="user.name" value="App Inventor"/>
+
+  <!-- No changes required -->
+  <property name="build.dir" location="build" />
+  <property name="dex.cache.dir" location="${build.dir}/dexCache" />
+  <property name="keystore.dir" location="keystore" />
+  <property name="libs.dir" location="lib" />
+  <property name="src.dir" location="src"/>
+
+  <target name="apk" >
+    <mkdir dir="${dex.cache.dir}" />
+    <java classname="com.google.appinventor.buildserver.Main" fork="true" failonerror="true">
+      <classpath>
+        <fileset dir="${libs.dir}" includes="*.jar" />
+      </classpath>
+      <sysproperty key="file.encoding" value="UTF-8" />
+      <jvmarg value="-Djava.awt.headless=true" />
+      <arg value="--childProcessRamMb" />
+      <arg value="2048" />
+      <arg value="--inputZipFile" />
+      <arg value="${src.dir}/${project.name}.aia" />
+      <arg value="--userName" />
+      <arg value="${user.name}" />
+      <arg value="--outputDir" />
+      <arg value="${build.dir}" />
+      <arg value="--outputFileName" />
+      <arg value="${project.name}.apk" />
+      <arg value="--dexCacheDir" />
+      <arg value="${dex.cache.dir}" />
+      <arg value="--ext" />
+      <arg value="apk" />
+    </java>
+
+    <!-- Remove the dexCache directory after Java task completes -->
+    <delete dir="${dex.cache.dir}" />
+  </target>
+
+</project>
